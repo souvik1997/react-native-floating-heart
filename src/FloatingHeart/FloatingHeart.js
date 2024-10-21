@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Animated, Dimensions, Easing, Image } from 'react-native';
-
-let heartCount = 1;
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const animationEndY = Math.ceil(SCREEN_HEIGHT * 0.7);
@@ -24,9 +22,9 @@ const Heart = ({
 );
 
 const FloatingHeart = ({
-  count,
+  count = 0,
   style,
-  color,
+  color = 'red',
   heartStyle,
   renderCustomIcon,
 }) => {
@@ -35,7 +33,6 @@ const FloatingHeart = ({
   useEffect(() => {
     if (count !== 0) {
       const newHeartArr = [...hearts, {
-        id: heartCount++,
         right: getRandomNumber(50, 150),
       }]
       setHearts(newHeartArr);
@@ -44,9 +41,9 @@ const FloatingHeart = ({
 
   return (
     <View style={[styles.container, style]}>
-      {hearts.map(({ id, right }) => (
+      {hearts.map(({ right }, index) => (
         <AnimatedIcon
-          key={id}
+          key={index}
           color={color}
           heartWrapperStyle={{ right }}
           heartStyle={heartStyle}
@@ -63,11 +60,6 @@ FloatingHeart.propTypes = {
   style: PropTypes.object,
   heartStyle: PropTypes.object,
   renderCustomIcon: PropTypes.func,
-}
-
-FloatingHeart.defaultProps = {
-  count: 0,
-  color: 'red',
 }
 
 const AnimatedIcon = ({
